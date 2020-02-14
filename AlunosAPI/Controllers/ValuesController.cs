@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlunosAPI.Controllers
@@ -12,9 +14,18 @@ namespace AlunosAPI.Controllers
     {
         // GET api/values
         [HttpGet]
+        [EnableCors]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            List<string> alunos = new List<string>();
+            if (!System.IO.File.Exists("ArquivoDB/Alunos.txt"))
+            {
+                System.IO.Directory.CreateDirectory("ArquivoDB");
+                System.IO.File.WriteAllText("ArquivoDB/Alunos.txt", "Fernando,Carol,João");
+            }
+                alunos = System.IO.File.ReadAllText("ArquivoDB/Alunos.txt").Split(",").ToList();
+
+            return alunos;
         }
 
         // GET api/values/5
@@ -23,6 +34,16 @@ namespace AlunosAPI.Controllers
         {
             return "value";
         }
+
+        [HttpGet("CadastrarAluno")]
+        public ActionResult<string> CadastrarAluno(string nomeAluno)
+        {
+            StreamWriter streamWriter =  System.IO.File.AppendText("ArquivoDB/Alunos.txt");
+            streamWriter.Write("," + nomeAluno);
+            streamWriter.Close();
+            return "Inserido com sucesso";
+        }
+
 
         // POST api/values
         [HttpPost]

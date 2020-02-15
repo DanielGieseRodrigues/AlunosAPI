@@ -30,8 +30,8 @@ namespace AlunosAPI
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.WithOrigins("null",
-                                            "*").AllowAnyHeader().AllowAnyMethod();
+                        builder.WithOrigins("localhost",
+                                            "*").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                     });
             });
 
